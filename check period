@@ -1,0 +1,31 @@
+import pandas as pd
+
+def date_check(project_period: str, date: pd.Timestamp) -> bool:
+    """
+    Verifica se una data cade nell'intervallo corretto per il periodo di progetto specificato.
+
+    >>> date_check('NWAIII', pd.to_datetime('1.1.2015'))
+    True
+    >>> date_check('NWAIII', pd.to_datetime('1.1.1989'))
+    False
+    """
+    # Definiamo gli intervalli (anno inizio, anno fine) per ogni periodo
+    intervals = {
+        'NWAI': (1983, 1985),
+        'NWAII': (1997, 2001),
+        'NWAIII': (2011, 2017)
+    }
+    
+    # Se il periodo non è tra quelli definiti, restituiamo False
+    if project_period not in intervals:
+        return False
+    
+    start_year, end_year = intervals[project_period]
+    
+    # Verifichiamo se l'anno della data è compreso nell'intervallo (inclusi gli estremi)
+    return start_year <= date.year <= end_year
+
+# Esecuzione dei test
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
