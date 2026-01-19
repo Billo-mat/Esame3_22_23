@@ -1,0 +1,7 @@
+# Calcoliamo la mediana dell'altitudine (elevation) per ogni specie
+# Usiamo groupby('species') per raggruppare i dati e .median() per il calcolo
+median_elevation = df_prey.groupby('species')['elevation'].median()
+
+# Stampiamo il risultato
+print("Mediana dell'altitudine per specie:")
+print(median_elevation)
