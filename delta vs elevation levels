@@ -1,0 +1,30 @@
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# 1. Caricamento e filtraggio
+df_prey = pd.read_csv('prey_winter.csv', sep=';')
+forest_prey = df_prey[df_prey['habitat_type'] == 1].copy()
+
+# 2. Ordinamento per altitudine crescente
+# Fondamentale per calcolare il delta rispetto alla quota precedente "più vicina"
+forest_prey = forest_prey.sort_values('elevation')
+
+# 3. Calcolo dei Delta
+# Usiamo il metodo .diff() di pandas, ma dobbiamo gestire il primo valore
+# La traccia dice: il primo delta è rispetto a 0 (livello del mare)
+forest_prey['delta'] = forest_prey['elevation'].diff()
+forest_prey.iloc[0, forest_prey.columns.get_loc('delta')] = forest_prey.iloc[0]['elevation'] - 0
+
+# 4. Grafico dei Delta rispetto ai livelli di altitudine
+plt.scatter(forest_prey['elevation'], forest_prey['delta'], color='forestgreen', alpha=0.6)
+plt.plot(forest_prey['elevation'], forest_prey['delta'], color='forestgreen', alpha=0.3, linestyle='--')
+
+plt.title('Delta di Altitudine vs. Livelli di Altitudine (Habitat: Forest)')
+plt.xlabel('Elevation (m a.s.l.)')
+plt.ylabel('Delta Elevation (m)')
+plt.grid(True, linestyle=':', alpha=0.6)
+
+# 5. Salvataggio
+
+plt.show()
