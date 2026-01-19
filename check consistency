@@ -1,0 +1,14 @@
+# 1. Applichiamo la funzione date_check a ogni riga del DataFrame
+# Usiamo axis=1 per accedere a più colonne contemporaneamente
+check_series = df_prey.apply(
+    lambda row: date_check(row['project_period'], row['date']), 
+    axis=1
+)
+
+# 2. Verifichiamo se tutti i valori sono True
+all_consistent = check_series.all()
+
+# 3. Utilizziamo assert per confermare la consistenza (non solleverà errori se True)
+assert all_consistent, "Rilevate inconsistenze tra date e periodi di progetto!"
+
+print(f"Verifica completata: tutti i {len(df_prey)} record sono coerenti con i periodi di progetto.")
