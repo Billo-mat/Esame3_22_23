@@ -1,0 +1,39 @@
+import pandas as pd
+import pymc as pm
+import arviz as az
+import matplotlib.pyplot as plt
+
+# 1. Caricamento dei dati
+df_prey = pd.read_csv('prey_winter.csv', sep=';')
+
+# 2. Definizione del modello statistico
+with pm.Model() as model:
+    # --- Definizione delle PRIOR (distribuzioni a priori) ---
+    # Come richiesto: Normali con media 0 e deviazione standard 5
+    alpha = pm.Normal('alpha', mu=0, sigma=5)
+    beta_e = pm.Normal('beta_e', mu=0, sigma=5)
+    beta_h = pm.Normal('beta_h', mu=0, sigma=5)
+    
+    # σ (sigma) con distribuzione esponenziale (lambda = 1)
+    sigma = pm.Exponential('sigma', lam=1)
+    
+    # --- Definizione dell'EQUAZIONE LINEARE ---
+    # mu = alpha + beta_e * Elevation + beta_h * Habitat
+    mu = alpha + beta_e * df_prey['elevation'] + beta_h * df_prey['habitat_type']
+    
+    # --- Definizione della LIKELIHOOD (verosimiglianza) ---
+    # Lo slope osservato segue una distribuzione Normale con media 'mu' e deviazione 'sigma'
+    slope_obs = pm.Normal('slope_obs', mu=mu, sigma=sigma, observed=df_prey['slope'])
+    
+    # 3. Campionamento (Inference)
+    # Il computer genera migliaia di simulazioni per trovare i valori più probabili
+    trace = pm.sample(draws=1000, tune=1000, chains=2, return_inferencedata=True)
+
+# 4. Visualizzazione dei risultati
+# Genera i grafici delle distribuzioni a posteriori per ogni parametro
+az.plot_posterior(trace)
+plt.tight_layout()
+plt.show()
+
+# 5. Sommario statistico (Media, Deviazione Standard, Intervalli di Credibilità)
+print(az.summary(trace))
