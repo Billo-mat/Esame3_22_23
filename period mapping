@@ -1,0 +1,13 @@
+# 1. Definiamo il dizionario di mappatura
+period_mapping = {
+    'NWAI': 1,
+    'NWAII': 2,
+    'NWAIII': 3
+}
+
+# 2. Creiamo la nuova colonna 'period'
+# Il metodo map() associa ogni stringa di 'project_period' al numero corrispondente
+df_prey['period'] = df_prey['project_period'].map(period_mapping)
+
+# 3. Verifichiamo il risultato per le prime righe
+print(df_prey[['project_period', 'period']].head())
