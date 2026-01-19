@@ -1,0 +1,40 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# 1. Caricamento dati (sempre col separatore corretto)
+df_prey = pd.read_csv('prey_winter.csv', sep=';')
+
+# 2. Prepariamo i colori e i nomi per la legenda
+# Mappiamo i numeri del file ai nomi reali dell'habitat
+habitat_info = {
+    1: {'color': 'green',  'label': 'Forest'},
+    2: {'color': 'orange', 'label': 'Open habitat'},
+    3: {'color': 'red',    'label': 'Unsuitable'}
+}
+
+plt.figure(figsize=(10, 6))
+
+# 3. Creiamo lo scatter plot raggruppando per habitat
+# Cicliamo sui tipi di habitat presenti nel file
+for h_type in sorted(df_prey['habitat_type'].unique()):
+    subset = df_prey[df_prey['habitat_type'] == h_type]
+    
+    plt.scatter(
+        subset['slope'], 
+        subset['elevation'], 
+        c=habitat_info[h_type]['color'], 
+        label=habitat_info[h_type]['label'],
+        alpha=0.6,  # trasparenza per vedere i punti sovrapposti
+        edgecolors='w', # bordo bianco per distinguere i punti
+        s=50 # dimensione dei punti
+    )
+
+# 4. Aggiungiamo i dettagli richiesti
+plt.title('Elevation vs. Slope by Habitat Type')
+plt.xlabel('Slope (degrees)')
+plt.ylabel('Elevation (m a.s.l.)')
+plt.legend(title='Habitat Type')
+plt.grid(True, linestyle=':', alpha=0.5) # griglia opzionale per leggibilità
+
+# 5. Mostra e salva
+plt.show()
