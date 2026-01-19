@@ -1,0 +1,17 @@
+import pandas as pd
+
+# 1. Carichiamo il dataset
+# Nota: se il file usa un separatore diverso (es. punto e virgola), aggiungi sep=';'
+df_prey = pd.read_csv('prey_winter.csv')
+
+# 2. Convertiamo la colonna 'date' in formato datetime
+# Il formato DD.MM.YYYY richiede il parametro format='%d.%m.%Y'
+df_prey['date'] = pd.to_datetime(df_prey['date'], format='%d.%m.%Y')
+
+# 3. Impostiamo 'id' come indice del DataFrame
+# Verifichiamo prima se la colonna 'id' esiste (spesso è la prima colonna)
+df_prey.set_index('id', inplace=True)
+
+# 4. Verifica dei tipi di dato e dell'indice
+print(df_prey.info())
+print(df_prey.head())
