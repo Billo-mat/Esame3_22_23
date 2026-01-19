@@ -1,17 +1,13 @@
 import pandas as pd
 
-# 1. Carichiamo il dataset
-# Nota: se il file usa un separatore diverso (es. punto e virgola), aggiungi sep=';'
-df_prey = pd.read_csv('prey_winter.csv')
+# 1. Caricamento: specifichiamo il separatore ';'
+# Usiamo index_col='id' per soddisfare la richiesta di usare 'id' come indice
+df_prey = pd.read_csv('prey_winter.csv', sep=';', index_col='id')
 
-# 2. Convertiamo la colonna 'date' in formato datetime
-# Il formato DD.MM.YYYY richiede il parametro format='%d.%m.%Y'
+# 2. Conversione della colonna 'date'
+# Il formato nel file è DD.MM.YYYY (es. 03.04.2014)
 df_prey['date'] = pd.to_datetime(df_prey['date'], format='%d.%m.%Y')
 
-# 3. Impostiamo 'id' come indice del DataFrame
-# Verifichiamo prima se la colonna 'id' esiste (spesso è la prima colonna)
-df_prey.set_index('id', inplace=True)
-
-# 4. Verifica dei tipi di dato e dell'indice
+# 3. Verifica rapida
 print(df_prey.info())
 print(df_prey.head())
